@@ -1,0 +1,26 @@
+{
+  "asOf": "2026-09-30",
+  "fiscalYear": "FY 2026-27",
+  "currency": "BDT",
+  "unit": "Cr (1 Cr = 10,000,000 BDT)",
+  "note": "Synthetic demo dataset. Business units, custodian roles and figures are fictional; figures are deterministically rescaled from a private source model so magnitudes stay realistic.",
+  "brand_sbus": [
+    { "name": "Nexa Steel (NXS)", "custodian": "Brand Lead (Steel)", "status": "reporting", "budget_cr": 29.41, "expense_cr": 1.5470, "atl_cr": 2.91, "digital_cr": 1.45, "btl_cr": 7.44, "ooh_cr": 4.23, "other_cr": 13.38, "source": "Nexa Steel FY26-27 Marketing Budget Tracker — Overview (brand budget vs. actual expense)" },
+    { "name": "Nexa Essentials (NXE)", "custodian": "Brand Lead (Essentials)", "status": "reporting", "budget_cr": 23.33, "expense_cr": 0.8964, "atl_cr": 23.33, "source": "Nexa Essentials Marketing Budget Tracker — Top Sheet FY26-27 (brand budget as % of sales)" },
+    { "name": "Nexa Cement — Brand Budget (NXC)", "custodian": "Brand Lead (Cement)", "status": "reporting", "budget_cr": 20.61, "expense_cr": 1.5548, "atl_cr": 4.55, "digital_cr": 3.15, "btl_cr": 3.27, "ooh_cr": 7.38, "gift_cr": 1.92, "research_cr": 0.30, "source": "Nexa Cement Brand Budget 2026-27 — Budget Summary" },
+    { "name": "Nexa Ceramics (NCE)", "custodian": "Brand Lead (Ceramics)", "status": "budget", "budget_cr": 14.59, "expense_cr": 0, "btl_cr": 14.59, "source": "Nexa Ceramics Marketing Budget — Top Sheet (brand budget)" },
+    { "name": "Nexa Talent", "custodian": null, "status": "budget", "budget_cr": 3.83, "expense_cr": 0, "atl_cr": 0.81, "digital_cr": 0.89, "btl_cr": 1.10, "ooh_cr": 0.11, "gift_cr": 0.39, "salary_cr": 0.49, "source": "Nexa Talent Marketing Budget 26-27 — Budget Summary" },
+    { "name": "Nexa Lubes", "custodian": "Brand Lead (Lubes)", "status": "budget", "budget_cr": 3.80, "expense_cr": 0, "digital_cr": 0.35, "btl_cr": 1.25, "ooh_cr": 1.18, "gift_cr": 0.99, "salary_cr": 0.03, "source": "Nexa Lubes Marketing Budget 2026-2027 — Budget Summary" },
+    { "name": "Nexa Breeze", "custodian": "Brand Lead (Breeze)", "status": "reporting", "budget_cr": 2.97, "expense_cr": 0.0720, "other_cr": 2.97, "source": "Nexa Breeze Budget Tracker — Sheet1 (monthly budget + expense)" },
+    { "name": "Nexa Readymix (NXR)", "custodian": "Brand Lead (Readymix)", "status": "reporting", "budget_cr": 3.05, "expense_cr": 0.1008, "atl_cr": 0.43, "digital_cr": 0.72, "btl_cr": 0.40, "ooh_cr": 0.93, "gift_cr": 0.57, "source": "Nexa Readymix Brand Budget 2026-27 — Budget Summary" },
+    { "name": "Nexa Pharma", "custodian": "Brand Lead (Pharma)", "status": "reporting", "budget_cr": 1.29, "expense_cr": 0.2349, "digital_cr": 0.29, "btl_cr": 0.10, "ooh_cr": 0.51, "gift_cr": 0.37, "research_cr": 0.03, "outlet_opening_cr": 0.113, "outlet_decoration_cr": 0.122, "source": "Nexa Pharma Budget Tracker — Summary (outlet opening + outlet decoration)" },
+    { "name": "Nexa Tyres (NXT)", "custodian": "Brand Lead (Tyres)", "status": "budget", "budget_cr": 1.13, "expense_cr": 0, "atl_cr": 0.01, "digital_cr": 0.02, "btl_cr": 0.39, "ooh_cr": 0.19, "gift_cr": 0.30, "salary_cr": 0.22, "source": "Nexa Tyres Marketing Budget 2026-2027 — Budget Summary" },
+    { "name": "Nexa Mediplex", "custodian": "Brand Lead (Mediplex)", "status": "reporting", "budget_cr": 0.70, "expense_cr": 0.5512, "atl_cr": 0.14, "digital_cr": 0.31, "btl_cr": 0.06, "gift_cr": 0.05, "salary_cr": 0.14, "source": "Nexa Mediplex Budget Tracker — Budget Plan + Monthly Tracker" },
+    { "name": "Nexa Air", "custodian": "Brand Lead (Air)", "status": "budget", "budget_cr": 1.77, "expense_cr": 0, "atl_cr": 0.27, "digital_cr": 0.70, "btl_cr": 0.61, "ooh_cr": 0.16, "gift_cr": 0.02, "salary_cr": 0.02, "source": "Nexa Air Budget Planner — Budget Summary" },
+    { "name": "Nexa AgroFeeds (NXA)", "custodian": null, "status": "reporting", "budget_cr": 9.65, "expense_cr": 1.7017, "atl_cr": 1.69, "digital_cr": 1.95, "btl_cr": 2.78, "ooh_cr": 2.19, "gift_cr": 0.84, "other_cr": 0.15, "source": "Nexa AgroFeeds Annual Marketing Budget Planner — Budget Summary" }
+  ],
+  "trade_sbus": [
+    { "name": "Nexa Cement — Trade Marketing (NXC)", "custodian": "Brand Lead (Cement)", "status": "reporting", "budget_cr": 166.84, "expense_cr": 11.58, "source": "Nexa Cement Marketing Budget — Budget Tracker (FY budget vs. actual to date)" },
+    { "name": "Nexa Essentials (NXE) — Trade", "custodian": "Brand Lead (Essentials)", "status": "budget", "budget_cr": 9.44, "expense_cr": 0, "source": "Nexa Essentials Budget Tracker — Approved Brand Budget (Trade Marketing as % of sales)" }
+  ]
+}

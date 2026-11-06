@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing Budget &amp; Expense Control Tower — FY 2026-27 (Demo)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --bg:#060b14; --panel:#0d1522; --panel2:#111c2c; --border:#1c2a3d; --text:#e6edf3; --muted:#8b98a9; --accent:#22c55e; --amber:#f59e0b; --red:#ef4444; --blue:#3b82f6; --cyan:#06b6d4; --pink:#ec4899; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+  .wrap { max-width:1320px; margin:0 auto; padding:22px 20px 60px; }
+  header h1 { margin:0; font-size:21px; font-weight:700; letter-spacing:-.3px; }
+  header .sub { color:var(--muted); font-size:13px; margin-top:3px; }
+  .tag { display:inline-block; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; margin-right:6px; }
+  .tag.fy { background:rgba(59,130,246,.15); color:#7ab6ff; border:1px solid rgba(59,130,246,.35); }
+  .tag.asof { background:rgba(34,197,94,.12); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
+  .tabs { display:flex; gap:8px; margin:18px 0 20px; flex-wrap:wrap; }
+  .tab { background:var(--panel); border:1px solid var(--border); color:var(--muted); padding:10px 18px; border-radius:9px; cursor:pointer; font-size:13px; font-weight:600; }
+  .tab:hover { color:var(--text); }
+  .tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+  .kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:20px; }
+  .kpi { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:15px 17px; }
+  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+  .kpi .value { font-size:25px; font-weight:700; margin-top:5px; }
+  .kpi .hint { font-size:12px; color:var(--muted); margin-top:2px; }
+  .grid2 { display:grid; grid-template-columns:1.4fr 1fr; gap:16px; }
+  .grid2e { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; }
+  .card h2 { margin:0 0 3px; font-size:14px; font-weight:600; }
+  .card .desc { font-size:12px; color:var(--muted); margin-bottom:13px; }
+  .chart-box { position:relative; height:320px; }
+  .chart-box.tall { height:430px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th,td { text-align:left; padding:9px 11px; border-bottom:1px solid var(--border); }
+  th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap; }
+  td.num,th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+  .chip { display:inline-block; font-size:11px; font-weight:600; padding:2px 9px; border-radius:20px; }
+  .chip.reporting { background:rgba(34,197,94,.14); color:#4ade80; }
+  .chip.budget { background:rgba(245,158,11,.14); color:#fbbf24; }
+  .chip.no_data { background:rgba(139,152,169,.14); color:#a5b1bf; }
+  .bar-wrap { height:7px; background:var(--panel2); border-radius:6px; overflow:hidden; }
+  .bar { height:100%; border-radius:6px; }
+  .note { background:var(--panel2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; font-size:12px; color:var(--muted); margin-top:12px; }
+  .note b { color:var(--text); }
+  select { background:var(--panel2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:9px 12px; font-size:14px; width:100%; max-width:460px; }
+  .sbu-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:14px 0; }
+  .footer { margin-top:26px; font-size:11px; color:#5a6774; text-align:center; }
+  @media (max-width:900px){ .kpis,.sbu-kpis{ grid-template-columns:repeat(2,1fr);} .grid2,.grid2e{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Marketing Budget &amp; Expense Control Tower</h1>
+    <div class="sub">NexaGroup — Strategic Planning &amp; Analytics · budget vs. expense per business unit · synthetic demo data</div>
+    <div style="margin-top:10px;"><span class="tag fy">FY 2026-27</span><span class="tag asof">Data as of 30 Sep 2026</span></div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="sbu">SBU-wise Analysis</div>
+    <div class="tab" data-tab="trade">Trade Marketing Budget</div>
+  </div>
+
+  <!-- ============ OVERVIEW ============ -->
+  <div id="tab-overview">
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="card">
+        <h2>Budget vs. Expense by SBU (Brand Marketing)</h2>
+        <div class="desc">Discretionary brand/ATL/BTL budget &amp; expense (BDT Crore) — trade commissions excluded (see Trade tab)</div>
+        <div class="chart-box tall"><canvas id="budgetChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Campaign Mix (Category Split)</h2>
+        <div class="desc">Aggregate brand budget by campaign type across all SBUs</div>
+        <div class="chart-box"><canvas id="categoryChart"></canvas></div>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:16px;">
+      <div class="card">
+        <h2>Monthly Budget vs. Actual — SBUs Reporting</h2>
+        <div class="desc">Nexa Mediplex + Nexa Breeze report monthly actuals (Nexa Mediplex Aug spike = transit-hub branding)</div>
+        <div class="chart-box" style="height:290px;"><canvas id="monthlyChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>SBU Roster</h2>
+        <div class="desc">All brand-marketing SBUs — budget, expense, utilization &amp; status</div>
+        <div style="overflow-x:auto;"><table id="roster"></table></div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Note:</b> This view covers <b>brand/discretionary marketing</b> (ATL, Digital, BTL, OOH, gifts, research, salary).
+      Trade-marketing commissions (Nexa Cement + Nexa Essentials) are tracked separately in the <b>Trade Marketing Budget</b> tab to avoid skewing brand spend.
+      Expense recording is still maturing — Nexa Steel, Nexa Essentials, Nexa Cement (Brand), Nexa AgroFeeds, Nexa Mediplex, Nexa Breeze, Nexa Readymix and Nexa Pharma have posted brand actuals so far.
+    </div>
+  </div>
+
+  <!-- ============ SBU-WISE ============ -->
+  <div id="tab-sbu" style="display:none;">
+    <div class="card">
+      <h2>Select an SBU</h2>
+      <div class="desc">Drill into one SBU — budget vs. expense, campaign-type breakdown and monthly phasing</div>
+      <select id="sbuSelect"></select>
+    </div>
+    <div class="sbu-kpis" id="sbuKpis"></div>
+    <div class="grid2">
+      <div class="card">
+        <h2 id="sbuCatTitle">Campaign Type Analysis</h2>
+        <div class="desc">FY budget split by campaign type (ATL / Digital / BTL / OOH / etc.)</div>
+        <div class="chart-box"><canvas id="sbuCatChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2 id="sbuMonthTitle">Monthly Budget vs. Actual</h2>
+        <div class="desc" id="sbuMonthDesc">Budget phasing across the fiscal year</div>
+        <div class="chart-box"><canvas id="sbuMonthChart"></canvas></div>
+        <div id="sbuMonthNone" style="display:none;color:var(--muted);font-size:13px;padding:20px 0;">No monthly phasing available for this SBU.</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h2>Campaign Type Summary (ATL vs BTL vs Digital vs Other)</h2>
+      <div class="desc">High-level read of how this SBU's budget is deployed</div>
+      <div class="chart-box" style="height:220px;"><canvas id="sbuHlChart"></canvas></div>
+    </div>
+    <div class="note" id="sbuSource"></div>
+  </div>
+
+  <!-- ============ TRADE ============ -->
+  <div id="tab-trade" style="display:none;">
+    <div class="kpis" id="tradeKpis"></div>
+    <div class="grid2">
+      <div class="card">
+        <h2>Trade Budget vs. Expense</h2>
+        <div class="desc">Variable commissions &amp; trade programs (BDT Crore)</div>
+        <div class="chart-box"><canvas id="tradeChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Trade Marketing Roster</h2>
+        <div class="desc">Budget, expense to date and utilization</div>
+        <table id="tradeRoster"></table>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h2>Nexa Cement Trade — Monthly Budget Phasing</h2>
+      <div class="desc">Commission-based budget scales with sales volume; actual to date is a single lump (11.06 Cr)</div>
+      <div class="chart-box" style="height:280px;"><canvas id="tradeMonthChart"></canvas></div>
+    </div>
+    <div class="note"><b>Note:</b> Trade budgets are largely <b>variable sales commissions</b> (dealer/distributor commission, sales incentives, trade programs) and are much larger than brand spend. They are kept in a dedicated tab for a fair brand-vs-brand comparison.</div>
+  </div>
+
+  <div class="footer">Self-contained control tower · Chart.js 4.4.1 · All figures are synthetic demo data consolidated across business-unit marketing budgets</div>
+</div>
+
+<script>
+// ================= DATA =================
+const CAT_KEYS = ["atl","digital","btl","ooh","gift","research","salary","other"];
+const CAT_LABELS = { atl:"ATL (Traditional)", digital:"Digital", btl:"BTL (Activations)", ooh:"OOH / Outdoor", gift:"Gift & Printing", research:"Research", salary:"Salary", other:"Other / Unallocated" };
+const CAT_COLORS = { atl:"#ef4444", digital:"#3b82f6", btl:"#f59e0b", ooh:"#06b6d4", gift:"#22c55e", research:"#a78bfa", salary:"#8b98a9", other:"#64748b" };
+const EXP_LABELS = { outlet_opening:"Outlet Opening", outlet_decoration:"Outlet Decoration" };
+const EXP_COLORS = { outlet_opening:"#f59e0b", outlet_decoration:"#3b82f6" };
+const MONTHS = ["Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"];
+
+// Brand / discretionary marketing business units — synthetic demo dataset (mirrored by ./data.json)
+const BRAND = [
+  { name:"Nexa Steel (NXS)", custodian:"Brand Lead (Steel)", status:"reporting", budget:29.41, expense:1.5470, cats:{atl:2.91, digital:1.45, btl:7.44, ooh:4.23, other:13.38},
+    source:"Nexa Steel FY26-27 Marketing Budget Tracker — Overview (brand budget vs. actual expense)", monthly:{ budget:[1.95,1.66,2.11,1.51,3.06,3.96,3.53,2.57,1.53,3.64,1.16,1.17], actual:[0.375,0.554,0.536,0,0,0,0,0,0,0,0,0] } },
+  { name:"Nexa Essentials (NXE)", custodian:"Brand Lead (Essentials)", status:"reporting", budget:23.33, expense:0.8964, cats:{atl:23.33},
+    source:"Nexa Essentials Marketing Budget Tracker — Top Sheet FY26-27 (brand budget as % of sales)", monthly:null },
+  { name:"Nexa Cement — Brand Budget (NXC)", custodian:"Brand Lead (Cement)", status:"reporting", budget:20.61, expense:1.5548, cats:{atl:4.55, digital:3.15, btl:3.27, ooh:7.38, gift:1.92, research:0.30},
+    source:"Nexa Cement Brand Budget 2026-27 — Budget Summary", monthly:null },
+  { name:"Nexa Ceramics (NCE)", custodian:"Brand Lead (Ceramics)", status:"budget", budget:14.59, expense:0, cats:{btl:14.59},
+    source:"Nexa Ceramics Marketing Budget — Top Sheet (brand budget)", monthly:{ budget:[1.25,1.11,1.20,1.25,1.10,1.22,1.19,1.36,1.68,1.10,1.05,1.04], actual:null } },
+  { name:"Nexa Talent", custodian:"—", status:"budget", budget:3.83, expense:0, cats:{atl:0.81, digital:0.89, btl:1.10, ooh:0.11, gift:0.39, salary:0.49},
+    source:"Nexa Talent Marketing Budget 26-27 — Budget Summary", monthly:null },
+  { name:"Nexa Lubes", custodian:"Brand Lead (Lubes)", status:"budget", budget:3.80, expense:0, cats:{digital:0.35, btl:1.25, ooh:1.18, gift:0.99, salary:0.03},
+    source:"Nexa Lubes Marketing Budget 2026-2027 — Budget Summary", monthly:null },
+  { name:"Nexa Breeze", custodian:"Brand Lead (Breeze)", status:"reporting", budget:2.97, expense:0.0720, cats:{other:2.97},
+    source:"Nexa Breeze Budget Tracker — Sheet1 (monthly budget + expense)", monthly:{ budget:[0,0.039,0.057,0.288,0.351,0.288,0.315,0.306,0.297,0.396,0.387,0.252], actual:[0,0.032,0.040,0,0,0,0,0,0,0,0,0] } },
+  { name:"Nexa Readymix (NXR)", custodian:"Brand Lead (Readymix)", status:"reporting", budget:3.05, expense:0.1008, cats:{atl:0.43, digital:0.72, btl:0.40, ooh:0.93, gift:0.57},
+    source:"Nexa Readymix Brand Budget 2026-27 — Budget Summary", monthly:null },
+  { name:"Nexa Pharma", custodian:"Brand Lead (Pharma)", status:"reporting", budget:1.29, expense:0.2349, cats:{digital:0.29, btl:0.10, ooh:0.51, gift:0.37, research:0.03},
+    expenseCats:{outlet_opening:0.113, outlet_decoration:0.122},
+    source:"Nexa Pharma Budget Tracker — Summary (outlet opening + outlet decoration)", monthly:null },
+  { name:"Nexa Tyres (NXT)", custodian:"Brand Lead (Tyres)", status:"budget", budget:1.13, expense:0, cats:{atl:0.01, digital:0.02, btl:0.39, ooh:0.19, gift:0.30, salary:0.22},
+    source:"Nexa Tyres Marketing Budget 2026-2027 — Budget Summary", monthly:null },
+  { name:"Nexa Mediplex", custodian:"Brand Lead (Mediplex)", status:"reporting", budget:0.70, expense:0.5512, cats:{atl:0.14, digital:0.31, btl:0.06, gift:0.05, salary:0.14},
+    source:"Nexa Mediplex Budget Tracker — Budget Plan + Monthly Tracker", monthly:{ budget:[0.058,0.058,0.058,0.058,0.058,0.058,0.058,0.058,0.058,0.058,0.058,0.058], actual:[0.024,0.528,0,0,0,0,0,0,0,0,0,0] } },
+  { name:"Nexa Air", custodian:"Brand Lead (Air)", status:"budget", budget:1.77, expense:0, cats:{atl:0.27, digital:0.70, btl:0.61, ooh:0.16, gift:0.02, salary:0.02},
+    source:"Nexa Air Budget Planner — Budget Summary", monthly:null },
+  { name:"Nexa AgroFeeds (NXA)", custodian:"—", status:"reporting", budget:9.65, expense:1.7017, cats:{atl:1.69, digital:1.95, btl:2.78, ooh:2.19, gift:0.84, other:0.15},
+    source:"Nexa AgroFeeds Annual Marketing Budget Planner — Budget Summary", monthly:{ budget:null, actual:[0.728,0.528,0.446,0,0,0,0,0,0,0,0,0] } }
+];
+
+// Trade marketing business units (commissions & trade programs)
+const TRADE = [
+  { name:"Nexa Cement — Trade Marketing (NXC)", custodian:"Brand Lead (Cement)", budget:166.84, expense:11.58,
+    source:"Nexa Cement Marketing Budget — Budget Tracker (FY budget vs. actual to date)",
+    monthly:{ budget:[12.79,12.79,13.43,13.43,13.99,14.79,15.99,15.83,13.59,14.55,12.39,13.35] } },
+  { name:"Nexa Essentials (NXE) — Trade", custodian:"Brand Lead (Essentials)", budget:9.44, expense:0,
+    source:"Nexa Essentials Budget Tracker — Approved Brand Budget (Trade Marketing as % of sales)", monthly:null }
+];
+
+const STATUS_META = { reporting:{label:"Reporting",cls:"reporting"}, budget:{label:"Budget only",cls:"budget"}, no_data:{label:"No data",cls:"no_data"} };
+function cr(n){ return n==null ? "—" : n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function cr1(n){ return n==null ? "—" : n.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}); }
+
+let brandData, totalBrand, totalBrandExp, reportingCount, noDataCount, brandUtil;
+let totalTrade, totalTradeExp, tradeUtil, agg, aggTotal;
+function recomputeTotals(){
+  brandData = BRAND.filter(s=>s.budget!=null);
+  totalBrand = brandData.reduce((a,s)=>a+s.budget,0);
+  totalBrandExp = brandData.reduce((a,s)=>a+(s.expense||0),0);
+  reportingCount = BRAND.filter(s=>s.status==="reporting").length;
+  noDataCount = BRAND.filter(s=>s.status==="no_data").length;
+  brandUtil = totalBrand ? totalBrandExp/totalBrand*100 : 0;
+
+  totalTrade = TRADE.reduce((a,s)=>a+s.budget,0);
+  totalTradeExp = TRADE.reduce((a,s)=>a+(s.expense||0),0);
+  tradeUtil = totalTrade ? totalTradeExp/totalTrade*100 : 0;
+
+  agg = {}; CAT_KEYS.forEach(k=>agg[k]=0);
+  BRAND.forEach(s=>{ if(s.cats) CAT_KEYS.forEach(k=>agg[k]+=(s.cats[k]||0)); });
+  aggTotal = CAT_KEYS.reduce((a,k)=>a+agg[k],0);
+}
+recomputeTotals();
+
+// ================= HELPERS =================
+const activeCharts = [];
+function destroyAll(){ activeCharts.forEach(c=>{ try{c.destroy();}catch(e){} }); activeCharts.length=0; }
+function newChart(id,cfg){ const c = new Chart(document.getElementById(id),cfg); activeCharts.push(c); return c; }
+Chart.defaults.color = "#8b98a9";
+Chart.defaults.borderColor = "#1c2a3d";
+Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+
+// ================= OVERVIEW =================
+function renderOverview(){
+  document.getElementById("kpis").innerHTML = `
+    <div class="kpi"><div class="label">Brand FY Budget</div><div class="value">${cr(totalBrand)} Cr</div><div class="hint">${brandData.length} SBUs</div></div>
+    <div class="kpi"><div class="label">Brand Expense</div><div class="value">${cr(totalBrandExp)} Cr</div><div class="hint">as of 30 Sep 2026</div></div>
+    <div class="kpi"><div class="label">Brand Utilization</div><div class="value">${brandUtil.toFixed(1)}%</div><div class="hint">expense ÷ budget</div></div>
+    <div class="kpi"><div class="label">SBUs Reporting</div><div class="value" style="color:var(--accent)">${reportingCount} / ${brandData.length}</div><div class="hint">entered actuals</div></div>
+    <div class="kpi"><div class="label">No Data</div><div class="value" style="color:var(--amber)">${noDataCount}</div><div class="hint">tracker not provided</div></div>`;
+
+  const sorted = [...brandData].sort((a,b)=>b.budget-a.budget);
+  newChart("budgetChart", {
+    type:"bar",
+    data:{ labels:sorted.map(s=>s.name.replace(/\s*\([A-Z]{3}\)/g,"").replace(" — Brand Budget","(Brand)")),
+      datasets:[
+        { label:"FY Budget", data:sorted.map(s=>s.budget), backgroundColor:"rgba(59,130,246,.75)", borderRadius:5 },
+        { label:"Expense to date", data:sorted.map(s=>s.expense), backgroundColor:"rgba(239,68,68,.85)", borderRadius:5 }
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
+      scales:{ x:{ ticks:{ maxRotation:50, minRotation:0, font:{size:10} } }, y:{ title:{ display:true, text:"BDT Crore" } } } }
+  });
+
+  const catKeys = CAT_KEYS.filter(k=>agg[k]>0);
+  newChart("categoryChart", {
+    type:"doughnut",
+    data:{ labels:catKeys.map(k=>CAT_LABELS[k]), datasets:[{ data:catKeys.map(k=>agg[k]), backgroundColor:catKeys.map(k=>CAT_COLORS[k]), borderColor:"#060b14", borderWidth:2 }]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:"58%",
+      plugins:{ legend:{ position:"right", labels:{ boxWidth:10, boxHeight:10, font:{size:11} } } } }
+  });
+
+  const ph = (n,key)=>{ const u=BRAND.find(s=>s.name===n); const a=u&&u.monthly&&u.monthly[key]; return MONTHS.map((_,i)=>(a&&a[i])||0); };
+  const mb = MONTHS.map((_,i)=> ph("Nexa Mediplex","budget")[i] + ph("Nexa Breeze","budget")[i]);
+  const ma = MONTHS.map((_,i)=> ph("Nexa Mediplex","actual")[i] + ph("Nexa Breeze","actual")[i]);
+  newChart("monthlyChart", {
+    type:"bar",
+    data:{ labels:MONTHS, datasets:[
+      { label:"Budget", data:mb, backgroundColor:"rgba(59,130,246,.65)", borderRadius:4 },
+      { label:"Actual", data:ma, backgroundColor:"rgba(239,68,68,.85)", borderRadius:4 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
+      scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } }
+  });
+
+  const order = { reporting:0, budget:1, no_data:2 };
+  const rs = [...BRAND].sort((a,b)=> order[a.status]-order[b.status] || (b.budget||0)-(a.budget||0));
+  let rows="";
+  rs.forEach(s=>{
+    const m = STATUS_META[s.status];
+    const pct = s.budget ? (s.expense||0)/s.budget*100 : 0;
+    const barColor = pct>100?"var(--red)":(pct>75?"var(--amber)":"var(--accent)");
+    rows += `<tr><td>${s.name}</td><td style="color:var(--muted)">${s.custodian||"—"}</td>
+      <td class="num">${cr(s.budget)}</td><td class="num">${cr(s.expense)}</td><td class="num">${s.budget?pct.toFixed(1)+"%":"—"}</td>
+      <td style="width:85px">${s.budget?`<div class="bar-wrap"><div class="bar" style="width:${Math.min(pct,100)}%;background:${barColor}"></div></div>`:""}</td>
+      <td><span class="chip ${m.cls}">${m.label}</span></td></tr>`;
+  });
+  document.getElementById("roster").innerHTML = `<thead><tr>
+    <th>SBU</th><th>Custodian</th><th class="num">FY Budget (Cr)</th><th class="num">Expense (Cr)</th><th class="num">% Used</th><th>Utilization</th><th>Status</th>
+  </tr></thead><tbody>${rows}</tbody>`;
+}
+
+// ================= SBU-WISE =================
+function renderSbu(){
+  const sel = document.getElementById("sbuSelect");
+  sel.innerHTML = brandData.map(s=>`<option value="${s.name}">${s.name} — ${cr(s.budget)} Cr</option>`).join("");
+  sel.onchange = drawSbu;
+  drawSbu();
+}
+function drawSbu(){
+  const name = document.getElementById("sbuSelect").value;
+  const s = BRAND.find(x=>x.name===name);
+  const pct = s.budget ? (s.expense||0)/s.budget*100 : 0;
+  document.getElementById("sbuKpis").innerHTML = `
+    <div class="kpi"><div class="label">FY Budget</div><div class="value">${cr(s.budget)} Cr</div><div class="hint">${s.custodian||""}</div></div>
+    <div class="kpi"><div class="label">Expense to Date</div><div class="value">${cr(s.expense)} Cr</div><div class="hint">as of 30 Sep 2026</div></div>
+    <div class="kpi"><div class="label">% Used</div><div class="value" style="color:${pct>100?'var(--red)':pct>75?'var(--amber)':'var(--accent)'}">${pct.toFixed(1)}%</div><div class="hint">expense ÷ budget</div></div>
+    <div class="kpi"><div class="label">Remaining</div><div class="value">${cr(s.budget-(s.expense||0))} Cr</div><div class="hint">budget − expense</div></div>`;
+  document.getElementById("sbuSource").innerHTML = `<b>Source:</b> ${s.source||"—"} &nbsp;·&nbsp; <b>Status:</b> ${STATUS_META[s.status].label}`;
+  destroyAll();
+
+  document.getElementById("sbuCatTitle").textContent = "Campaign Type Analysis — " + s.name;
+  const keys = CAT_KEYS.filter(k=>((s.cats||{})[k]||0)>0);
+  const catCanvas = document.getElementById("sbuCatChart");
+  if(keys.length){
+    catCanvas.style.display = "";
+    newChart("sbuCatChart", {
+      type:"doughnut",
+      data:{ labels:keys.map(k=>CAT_LABELS[k]), datasets:[{ data:keys.map(k=>s.cats[k]), backgroundColor:keys.map(k=>CAT_COLORS[k]), borderColor:"#060b14", borderWidth:2 }]},
+      options:{ responsive:true, maintainAspectRatio:false, cutout:"58%",
+        plugins:{ legend:{ position:"right", labels:{ boxWidth:10, boxHeight:10, font:{size:11} } } } }
+    });
+  } else { catCanvas.style.display = "none"; }
+
+  // high-level ATL/BTL/Digital/Other
+  const c = s.cats||{};
+  const hl = {
+    "ATL (Traditional + OOH)": (c.atl||0)+(c.ooh||0),
+    "BTL (Activations + Gifts)": (c.btl||0)+(c.gift||0),
+    "Digital": (c.digital||0),
+    "Other (Research+Salary+Unalloc)": (c.research||0)+(c.salary||0)+(c.other||0)
+  };
+  const hlKeys = Object.keys(hl).filter(k=>hl[k]>0);
+  newChart("sbuHlChart", {
+    type:"bar",
+    data:{ labels:hlKeys, datasets:[{ label:"Budget (Cr)", data:hlKeys.map(k=>hl[k]), backgroundColor:["#ef4444","#f59e0b","#3b82f6","#64748b"], borderRadius:5 }]},
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:"y",
+      plugins:{ legend:{ display:false } }, scales:{ x:{ title:{ display:true, text:"BDT Crore" } } } }
+  });
+
+  document.getElementById("sbuMonthTitle").textContent = "Monthly Budget vs. Actual — " + s.name;
+  const m = s.monthly, mc = document.getElementById("sbuMonthChart"), mn = document.getElementById("sbuMonthNone"), md = document.getElementById("sbuMonthDesc");
+  mc.style.display=""; mn.style.display="none";
+  if(m && (m.budget || m.actual)){
+    const datasets=[];
+    if(m.budget) datasets.push({ label:"Budget", data:m.budget, backgroundColor:"rgba(59,130,246,.65)", borderRadius:4 });
+    if(m.actual) datasets.push({ label:"Actual", data:m.actual, backgroundColor:"rgba(239,68,68,.85)", borderRadius:4 });
+    md.textContent = (m.budget && m.actual) ? "Budget phasing vs. actual spend (BDT Crore)" : (m.budget ? "Budget phasing (BDT Crore) — no actuals entered yet" : "Actual spend (BDT Crore) — no budget phasing provided");
+    newChart("sbuMonthChart", { type:"bar", data:{ labels:MONTHS, datasets },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
+        scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } } });
+  } else if(s.expenseCats && Object.keys(s.expenseCats).some(k=>(s.expenseCats[k]||0)>0)){
+    document.getElementById("sbuMonthTitle").textContent = "Expense Breakdown — " + s.name;
+    const ek = Object.keys(s.expenseCats).filter(k=>(s.expenseCats[k]||0)>0);
+    md.textContent = "Actual spend by cost type (no monthly phasing in source) — BDT Crore";
+    newChart("sbuMonthChart", { type:"doughnut",
+      data:{ labels:ek.map(k=>EXP_LABELS[k]||k), datasets:[{ data:ek.map(k=>s.expenseCats[k]), backgroundColor:ek.map(k=>EXP_COLORS[k]||"#64748b"), borderColor:"#060b14", borderWidth:2 }]},
+      options:{ responsive:true, maintainAspectRatio:false, cutout:"55%",
+        plugins:{ legend:{ position:"right", labels:{ boxWidth:10, boxHeight:10, font:{size:11} } } } } });
+  } else {
+    document.getElementById("sbuMonthTitle").textContent = "Budget vs. Expense — " + s.name;
+    md.textContent = "No monthly phasing available — showing utilization (BDT Crore)";
+    newChart("sbuMonthChart", { type:"bar",
+      data:{ labels:["Budget","Expense to date","Remaining"], datasets:[{ label:"Cr", data:[s.budget, s.expense||0, Math.max(0, s.budget-(s.expense||0))], backgroundColor:["#3b82f6","#ef4444","#22c55e"], borderRadius:5 }]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } } });
+  }
+}
+
+// ================= TRADE =================
+function renderTrade(){
+  document.getElementById("tradeKpis").innerHTML = `
+    <div class="kpi"><div class="label">Trade FY Budget</div><div class="value">${cr(totalTrade)} Cr</div><div class="hint">${TRADE.length} SBUs</div></div>
+    <div class="kpi"><div class="label">Trade Expense</div><div class="value">${cr(totalTradeExp)} Cr</div><div class="hint">as of 30 Sep 2026</div></div>
+    <div class="kpi"><div class="label">Trade Utilization</div><div class="value">${tradeUtil.toFixed(1)}%</div><div class="hint">expense ÷ budget</div></div>
+    <div class="kpi"><div class="label">Brand + Trade Total</div><div class="value">${cr(totalBrand+totalTrade)} Cr</div><div class="hint">all SBUs</div></div>
+    <div class="kpi"><div class="label">Brand + Trade Expense</div><div class="value">${cr(totalBrandExp+totalTradeExp)} Cr</div><div class="hint">all SBUs</div></div>`;
+
+  newChart("tradeChart", {
+    type:"bar",
+    data:{ labels:TRADE.map(s=>s.name.replace(/\s*\([A-Z]{3}\)/g,"").replace(" — Trade Marketing","(Trade)").replace(" — Trade","(Trade)")),
+      datasets:[
+        { label:"FY Budget", data:TRADE.map(s=>s.budget), backgroundColor:"rgba(59,130,246,.75)", borderRadius:5 },
+        { label:"Expense to date", data:TRADE.map(s=>s.expense), backgroundColor:"rgba(239,68,68,.85)", borderRadius:5 }
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
+      scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } }
+  });
+
+  let rows="";
+  TRADE.forEach(s=>{
+    const pct = s.budget ? (s.expense||0)/s.budget*100 : 0;
+    const barColor = pct>100?"var(--red)":(pct>75?"var(--amber)":"var(--accent)");
+    rows += `<tr><td>${s.name}</td><td style="color:var(--muted)">${s.custodian}</td>
+      <td class="num">${cr(s.budget)}</td><td class="num">${cr(s.expense)}</td><td class="num">${pct.toFixed(1)}%</td>
+      <td style="width:80px"><div class="bar-wrap"><div class="bar" style="width:${Math.min(pct,100)}%;background:${barColor}"></div></div></td></tr>`;
+  });
+  document.getElementById("tradeRoster").innerHTML = `<thead><tr>
+    <th>SBU</th><th>Custodian</th><th class="num">FY Budget (Cr)</th><th class="num">Expense (Cr)</th><th class="num">% Used</th><th>Utilization</th>
+  </tr></thead><tbody>${rows}</tbody>`;
+
+  const at = TRADE[0] && TRADE[0].monthly && TRADE[0].monthly.budget;
+  newChart("tradeMonthChart", {
+    type:"bar",
+    data:{ labels:MONTHS, datasets:[{ label:"Budget (Cr)", data:at || MONTHS.map(()=>0), backgroundColor:"rgba(59,130,246,.65)", borderRadius:4 }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
+      scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } }
+  });
+}
+
+// ================= TABS =================
+let activeTab = "overview";
+function drawTab(id){
+  destroyAll();
+  if(id==="overview") renderOverview();
+  else if(id==="sbu") renderSbu();
+  else renderTrade();
+}
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    activeTab = t.dataset.tab;
+    ["overview","sbu","trade"].forEach(x=> document.getElementById("tab-"+x).style.display = x===activeTab ? "" : "none");
+    drawTab(activeTab);
+  };
+});
+
+// ============ OPTIONAL DATA-FILE SYNC ============
+// The dataset inlined above is the same synthetic dataset published as ./data.json.
+// When served over http(s) the page re-reads data.json (relative path) so editing that
+// file updates the dashboard; opened straight from disk (file://) or on any error the
+// inlined copy is used as-is. Monthly phasing lives only in the inlined copy and is kept.
+function rowToRecord(row, prev){
+  const rec = prev ? Object.assign({}, prev) : {};
+  rec.name = row.name;
+  rec.custodian = row.custodian || "—";
+  rec.status = row.status || "no_data";
+  rec.budget = row.budget_cr;
+  rec.expense = row.expense_cr;
+  rec.source = row.source;
+  const cats = {};
+  CAT_KEYS.forEach(k=>{ if(typeof row[k+"_cr"] === "number") cats[k] = row[k+"_cr"]; });
+  if(Object.keys(cats).length || (prev && prev.cats)) rec.cats = cats; else delete rec.cats;
+  const expenseCats = {};
+  Object.keys(EXP_LABELS).forEach(k=>{ if(typeof row[k+"_cr"] === "number") expenseCats[k] = row[k+"_cr"]; });
+  if(Object.keys(expenseCats).length) rec.expenseCats = expenseCats; else delete rec.expenseCats;
+  return rec;
+}
+function mergeRows(rows, list){
+  rows.forEach(row=>{
+    if(!row || !row.name) return;
+    const i = list.findIndex(s=>s.name===row.name);
+    const rec = rowToRecord(row, i>=0 ? list[i] : null);
+    if(i>=0) list[i] = rec; else list.push(rec);
+  });
+}
+async function hydrateFromDataJson(){
+  if(location.protocol!=="http:" && location.protocol!=="https:") return;
+  let doc;
+  try {
+    const r = await fetch("./data.json", {cache:"no-store"});
+    if(!r.ok) return;
+    doc = await r.json();
+  } catch(e){ console.warn("data.json unavailable — using inlined demo dataset"); return; }
+  if(!doc) return;
+  if(Array.isArray(doc.brand_sbus) && doc.brand_sbus.length) mergeRows(doc.brand_sbus, BRAND);
+  if(Array.isArray(doc.trade_sbus) && doc.trade_sbus.length) mergeRows(doc.trade_sbus, TRADE);
+  recomputeTotals();
+  drawTab(activeTab);
+}
+
+recomputeTotals();
+renderOverview();
+hydrateFromDataJson();
+</script>
+</body>
+</html>
