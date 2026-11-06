@@ -4,68 +4,183 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marketing Budget &amp; Expense Control Tower — FY 2026-27 (Demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  :root { --bg:#060b14; --panel:#0d1522; --panel2:#111c2c; --border:#1c2a3d; --text:#e6edf3; --muted:#8b98a9; --accent:#22c55e; --amber:#f59e0b; --red:#ef4444; --blue:#3b82f6; --cyan:#06b6d4; --pink:#ec4899; }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
-  .wrap { max-width:1320px; margin:0 auto; padding:22px 20px 60px; }
-  header h1 { margin:0; font-size:21px; font-weight:700; letter-spacing:-.3px; }
-  header .sub { color:var(--muted); font-size:13px; margin-top:3px; }
-  .tag { display:inline-block; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; margin-right:6px; }
-  .tag.fy { background:rgba(59,130,246,.15); color:#7ab6ff; border:1px solid rgba(59,130,246,.35); }
-  .tag.asof { background:rgba(34,197,94,.12); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
-  .tabs { display:flex; gap:8px; margin:18px 0 20px; flex-wrap:wrap; }
-  .tab { background:var(--panel); border:1px solid var(--border); color:var(--muted); padding:10px 18px; border-radius:9px; cursor:pointer; font-size:13px; font-weight:600; }
-  .tab:hover { color:var(--text); }
-  .tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
-  .kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:20px; }
-  .kpi { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:15px 17px; }
-  .kpi .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
-  .kpi .value { font-size:25px; font-weight:700; margin-top:5px; }
-  .kpi .hint { font-size:12px; color:var(--muted); margin-top:2px; }
-  .grid2 { display:grid; grid-template-columns:1.4fr 1fr; gap:16px; }
-  .grid2e { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-  .card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; }
-  .card h2 { margin:0 0 3px; font-size:14px; font-weight:600; }
-  .card .desc { font-size:12px; color:var(--muted); margin-bottom:13px; }
-  .chart-box { position:relative; height:320px; }
-  .chart-box.tall { height:430px; }
-  table { width:100%; border-collapse:collapse; font-size:13px; }
-  th,td { text-align:left; padding:9px 11px; border-bottom:1px solid var(--border); }
-  th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap; }
-  td.num,th.num { text-align:right; font-variant-numeric:tabular-nums; }
-  tr:hover td { background:rgba(255,255,255,.02); }
-  .chip { display:inline-block; font-size:11px; font-weight:600; padding:2px 9px; border-radius:20px; }
-  .chip.reporting { background:rgba(34,197,94,.14); color:#4ade80; }
-  .chip.budget { background:rgba(245,158,11,.14); color:#fbbf24; }
-  .chip.no_data { background:rgba(139,152,169,.14); color:#a5b1bf; }
-  .bar-wrap { height:7px; background:var(--panel2); border-radius:6px; overflow:hidden; }
-  .bar { height:100%; border-radius:6px; }
-  .note { background:var(--panel2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; font-size:12px; color:var(--muted); margin-top:12px; }
-  .note b { color:var(--text); }
-  select { background:var(--panel2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:9px 12px; font-size:14px; width:100%; max-width:460px; }
-  .sbu-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:14px 0; }
-  .footer { margin-top:26px; font-size:11px; color:#5a6774; text-align:center; }
-  @media (max-width:900px){ .kpis,.sbu-kpis{ grid-template-columns:repeat(2,1fr);} .grid2,.grid2e{ grid-template-columns:1fr; } }
+/* ================= NexaGroup · spec v2 design tokens (dark-first) ================= */
+:root{
+  --bg:#0F172A; --surface:#111827; --surface-2:#1E293B; --line:#334155;
+  --ink:#F8FAFC; --ink-2:#CBD5E1; --ink-3:#94A3B8;
+  --brand:#1E40AF; --brand-2:#3B82F6; --accent:#D97706; --accent-2:#F59E0B;
+  --ok:#10B981; --warn:#F59E0B; --bad:#DC2626; --neg-ink:#F87171;
+  --r-sm:8px; --r-md:12px; --r-lg:16px;
+  --sp-1:8px; --sp-2:16px; --sp-3:24px; --sp-4:32px; --sp-5:48px;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 8px 24px rgba(0,0,0,.35);
+  --font-head:'Fira Code',ui-monospace,monospace;
+  --font-body:'Fira Sans',system-ui,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#F1F5F9; --surface:#FFFFFF; --surface-2:#E7EDF5; --line:#CBD5E1;
+  --ink:#0F172A; --ink-2:#334155; --ink-3:#5A6B82;
+  --brand:#1D4ED8; --brand-2:#2563EB; --neg-ink:#DC2626;
+  --shadow-1:0 1px 2px rgba(15,23,42,.10); --shadow-2:0 8px 24px rgba(15,23,42,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--brand-2);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3{font-family:var(--font-head);letter-spacing:-.01em}
+button,select{font-family:inherit}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 var(--sp-3) var(--sp-5)}
+
+/* ================= sticky top bar ================= */
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line);margin-bottom:var(--sp-3)}
+.hd-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:var(--sp-2);padding:13px var(--sp-3);flex-wrap:wrap}
+.logo{width:42px;height:42px;border-radius:var(--r-sm);background:var(--brand);color:#FFF;display:grid;place-items:center;flex:none}
+.logo svg{width:24px;height:24px;fill:none;stroke:#FFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hd-txt h1{font-size:17px;font-weight:700}
+.hd-txt .sub{font-size:13px;color:var(--ink-3);margin-top:2px}
+.hd-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.tag.fy{background:rgba(59,130,246,.14);color:var(--brand-2);border:1px solid rgba(59,130,246,.35)}
+.tag.asof{background:rgba(16,185,129,.13);color:var(--ok);border:1px solid rgba(16,185,129,.32)}
+.chip-syn{font-size:12px;font-weight:600;padding:4px 11px;border-radius:999px;white-space:nowrap;background:rgba(217,119,6,.14);color:var(--accent-2);border:1px solid rgba(245,158,11,.35)}
+.tbtn{width:38px;height:38px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink-2);cursor:pointer;transition:transform .18s ease,border-color .18s ease,color .18s ease}
+.tbtn:hover{transform:translateY(-2px);border-color:var(--brand-2);color:var(--ink)}
+.tbtn:active{transform:translateY(0)}
+.tbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.ic-moon{display:none}
+[data-theme="light"] .ic-sun{display:none}
+[data-theme="light"] .ic-moon{display:block}
+
+/* ================= tabs ================= */
+.tabs{display:flex;gap:var(--sp-1);margin:0 0 var(--sp-3);flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:0}
+.tab{appearance:none;background:none;border:none;color:var(--ink-3);padding:11px 18px;cursor:pointer;font-size:14px;font-weight:600;border-radius:var(--r-sm) var(--r-sm) 0 0;position:relative;transition:color .18s ease,background-color .18s ease}
+.tab:hover{color:var(--ink);background:rgba(148,163,184,.08)}
+.tab.active{color:var(--ink)}
+.tab.active::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:3px;background:var(--accent-2);border-radius:3px 3px 0 0}
+
+/* ================= KPI cards ================= */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-2);margin-bottom:var(--sp-3)}
+.sbu-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:15px 17px;box-shadow:var(--shadow-1);transition:transform .2s ease,box-shadow .2s ease}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-2)}
+.kpi .label{font-size:13px;font-weight:600;color:var(--ink-3)}
+.kpi .value{font-size:29px;font-weight:600;font-family:var(--font-head);font-variant-numeric:tabular-nums;margin-top:6px;line-height:1.15}
+.kpi .value.pos{color:var(--ok)} .kpi .value.neu{color:var(--brand-2)} .kpi .value.wrn{color:var(--warn)} .kpi .value.bdd{color:var(--neg-ink)}
+.kpi .hint{margin-top:8px}
+.dchip{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(148,163,184,.14);color:var(--ink-2);border:1px solid var(--line);white-space:nowrap}
+.dchip.ok{background:rgba(16,185,129,.14);color:var(--ok);border-color:rgba(16,185,129,.35)}
+.dchip.warn{background:rgba(245,158,11,.14);color:var(--warn);border-color:rgba(245,158,11,.35)}
+.dchip.bad{background:rgba(220,38,38,.14);color:var(--neg-ink);border-color:rgba(220,38,38,.4)}
+.dchip.info{background:rgba(59,130,246,.14);color:var(--brand-2);border-color:rgba(59,130,246,.35)}
+
+/* ================= cards / charts ================= */
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:var(--sp-2)}
+.grid2e{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-3);box-shadow:var(--shadow-1)}
+.card h2{font-size:16px;font-weight:600;margin-bottom:3px}
+.card .desc{font-size:13px;color:var(--ink-3);margin-bottom:13px}
+.eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-3);margin-bottom:6px}
+.chart-box{position:relative;height:320px}
+.chart-box.tall{height:430px}
+
+/* ================= tables ================= */
+.tw{overflow:auto;max-height:68vh;border-radius:var(--r-sm)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line)}
+th{color:var(--ink-3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;position:sticky;top:0;background:var(--surface-2);z-index:2}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-head);font-size:13px}
+tbody tr{transition:background-color .15s ease}
+tbody tr:hover td{background:rgba(148,163,184,.06)}
+
+/* chips / bars / notes */
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.chip.reporting{background:rgba(16,185,129,.14);color:var(--ok);border:1px solid rgba(16,185,129,.32)}
+.chip.budget{background:rgba(217,119,6,.14);color:var(--accent-2);border:1px solid rgba(245,158,11,.32)}
+.chip.no_data{background:rgba(148,163,184,.14);color:var(--ink-3);border:1px solid var(--line)}
+.bar-wrap{height:7px;background:var(--surface-2);border-radius:6px;overflow:hidden}
+.bar{height:100%;border-radius:6px}
+.note{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;font-size:14px;color:var(--ink-2);margin-top:var(--sp-2);line-height:1.55}
+.note b{color:var(--ink)}
+select{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 12px;font-size:14px;width:100%;max-width:460px;cursor:pointer}
+select:hover{border-color:var(--brand-2)}
+.footer{margin-top:var(--sp-4);font-size:13px;color:var(--ink-3);text-align:center;line-height:1.7}
+.footer a{color:var(--brand-2)}
+
+/* ================= load-in stagger (first paint only) ================= */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+  .kpis .kpi,.sbu-kpis .kpi{animation:rise .3s cubic-bezier(.2,.7,.3,1) both}
+  .kpis .kpi:nth-child(2),.sbu-kpis .kpi:nth-child(2){animation-delay:50ms}
+  .kpis .kpi:nth-child(3),.sbu-kpis .kpi:nth-child(3){animation-delay:100ms}
+  .kpis .kpi:nth-child(4),.sbu-kpis .kpi:nth-child(4){animation-delay:150ms}
+  .kpis .kpi:nth-child(5){animation-delay:200ms}
+  .grid2>.card,.grid2e>.card{animation:rise .3s .15s cubic-bezier(.2,.7,.3,1) both}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+/* ================= responsive 390 / 768 / 1024 / 1440 ================= */
+@media(max-width:1024px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .grid2{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .wrap{padding:0 var(--sp-2) var(--sp-4)}
+  .hd-inner{padding:12px var(--sp-2)}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .sbu-kpis{grid-template-columns:repeat(2,1fr)}
+  .grid2e{grid-template-columns:1fr}
+  .kpi .value{font-size:24px}
+  .chart-box{height:280px}
+  .chart-box.tall{height:340px}
+}
+@media(max-width:390px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .hd-right{width:100%;margin-left:0}
+  .chart-box{height:240px}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Marketing Budget &amp; Expense Control Tower</h1>
-    <div class="sub">NexaGroup — Strategic Planning &amp; Analytics · budget vs. expense per business unit · synthetic demo data</div>
-    <div style="margin-top:10px;"><span class="tag fy">FY 2026-27</span><span class="tag asof">Data as of 30 Sep 2026</span></div>
-  </header>
+<header>
+  <div class="hd-inner">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10m14 11V10M9 21V4h6v17M5 10l7-6 7 6"/></svg>
+    </div>
+    <div class="hd-txt">
+      <h1>Marketing Budget &amp; Expense Control Tower</h1>
+      <div class="sub">NexaGroup — Strategic Planning &amp; Analytics · budget vs. expense per business unit</div>
+    </div>
+    <div class="hd-right">
+      <span class="chip-syn">Synthetic demo data</span>
+      <span class="tag fy">FY 2026-27</span>
+      <span class="tag asof">Data as of 30 Sep 2026</span>
+      <button class="tbtn" id="themeToggle" type="button" aria-label="Switch between dark and light theme" aria-pressed="false">
+        <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
 
-  <div class="tabs">
-    <div class="tab active" data-tab="overview">Overview</div>
-    <div class="tab" data-tab="sbu">SBU-wise Analysis</div>
-    <div class="tab" data-tab="trade">Trade Marketing Budget</div>
+<div class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab active" type="button" data-tab="overview" aria-pressed="true">Overview</button>
+    <button class="tab" type="button" data-tab="sbu" aria-pressed="false">SBU-wise Analysis</button>
+    <button class="tab" type="button" data-tab="trade" aria-pressed="false">Trade Marketing Budget</button>
   </div>
 
   <!-- ============ OVERVIEW ============ -->
   <div id="tab-overview">
+    <div class="eyebrow">Brand marketing · group view</div>
     <div class="kpis" id="kpis"></div>
     <div class="grid2">
       <div class="card">
@@ -88,7 +203,7 @@
       <div class="card">
         <h2>SBU Roster</h2>
         <div class="desc">All brand-marketing SBUs — budget, expense, utilization &amp; status</div>
-        <div style="overflow-x:auto;"><table id="roster"></table></div>
+        <div class="tw"><table id="roster"></table></div>
       </div>
     </div>
     <div class="note">
@@ -101,6 +216,7 @@
   <!-- ============ SBU-WISE ============ -->
   <div id="tab-sbu" style="display:none;">
     <div class="card">
+      <div class="eyebrow">Drill-down · one unit</div>
       <h2>Select an SBU</h2>
       <div class="desc">Drill into one SBU — budget vs. expense, campaign-type breakdown and monthly phasing</div>
       <select id="sbuSelect"></select>
@@ -116,7 +232,7 @@
         <h2 id="sbuMonthTitle">Monthly Budget vs. Actual</h2>
         <div class="desc" id="sbuMonthDesc">Budget phasing across the fiscal year</div>
         <div class="chart-box"><canvas id="sbuMonthChart"></canvas></div>
-        <div id="sbuMonthNone" style="display:none;color:var(--muted);font-size:13px;padding:20px 0;">No monthly phasing available for this SBU.</div>
+        <div id="sbuMonthNone" style="display:none;color:var(--ink-3);font-size:13px;padding:20px 0;">No monthly phasing available for this SBU.</div>
       </div>
     </div>
     <div class="card" style="margin-top:16px;">
@@ -129,6 +245,7 @@
 
   <!-- ============ TRADE ============ -->
   <div id="tab-trade" style="display:none;">
+    <div class="eyebrow">Trade commissions · separate pool</div>
     <div class="kpis" id="tradeKpis"></div>
     <div class="grid2">
       <div class="card">
@@ -139,7 +256,7 @@
       <div class="card">
         <h2>Trade Marketing Roster</h2>
         <div class="desc">Budget, expense to date and utilization</div>
-        <table id="tradeRoster"></table>
+        <div class="tw"><table id="tradeRoster"></table></div>
       </div>
     </div>
     <div class="card" style="margin-top:16px;">
@@ -150,16 +267,17 @@
     <div class="note"><b>Note:</b> Trade budgets are largely <b>variable sales commissions</b> (dealer/distributor commission, sales incentives, trade programs) and are much larger than brand spend. They are kept in a dedicated tab for a fair brand-vs-brand comparison.</div>
   </div>
 
-  <div class="footer">Self-contained control tower · Chart.js 4.4.1 · All figures are synthetic demo data consolidated across business-unit marketing budgets</div>
+  <div class="footer">Self-contained control tower · Chart.js 4.4.1 · All figures are synthetic demo data consolidated across business-unit marketing budgets<br>
+    <a href="PROFILE.md">Methodology &amp; data design</a> · Built by Abir</div>
 </div>
 
 <script>
 // ================= DATA =================
 const CAT_KEYS = ["atl","digital","btl","ooh","gift","research","salary","other"];
 const CAT_LABELS = { atl:"ATL (Traditional)", digital:"Digital", btl:"BTL (Activations)", ooh:"OOH / Outdoor", gift:"Gift & Printing", research:"Research", salary:"Salary", other:"Other / Unallocated" };
-const CAT_COLORS = { atl:"#ef4444", digital:"#3b82f6", btl:"#f59e0b", ooh:"#06b6d4", gift:"#22c55e", research:"#a78bfa", salary:"#8b98a9", other:"#64748b" };
+const CAT_COLORS = { atl:"#3B82F6", digital:"#60A5FA", btl:"#FBBF24", ooh:"#34D399", gift:"#10B981", research:"#94A3B8", salary:"#D97706", other:"#64748B" };
 const EXP_LABELS = { outlet_opening:"Outlet Opening", outlet_decoration:"Outlet Decoration" };
-const EXP_COLORS = { outlet_opening:"#f59e0b", outlet_decoration:"#3b82f6" };
+const EXP_COLORS = { outlet_opening:"#F59E0B", outlet_decoration:"#3B82F6" };
 const MONTHS = ["Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"];
 
 // Brand / discretionary marketing business units — synthetic demo dataset (mirrored by ./data.json)
@@ -230,26 +348,27 @@ recomputeTotals();
 const activeCharts = [];
 function destroyAll(){ activeCharts.forEach(c=>{ try{c.destroy();}catch(e){} }); activeCharts.length=0; }
 function newChart(id,cfg){ const c = new Chart(document.getElementById(id),cfg); activeCharts.push(c); return c; }
-Chart.defaults.color = "#8b98a9";
-Chart.defaults.borderColor = "#1c2a3d";
+let INK="#94A3B8", GRID="rgba(148,163,184,.15)", CHSURF="#111827";
+Chart.defaults.color = INK;
+Chart.defaults.borderColor = GRID;
 Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
 
 // ================= OVERVIEW =================
 function renderOverview(){
   document.getElementById("kpis").innerHTML = `
-    <div class="kpi"><div class="label">Brand FY Budget</div><div class="value">${cr(totalBrand)} Cr</div><div class="hint">${brandData.length} SBUs</div></div>
-    <div class="kpi"><div class="label">Brand Expense</div><div class="value">${cr(totalBrandExp)} Cr</div><div class="hint">as of 30 Sep 2026</div></div>
-    <div class="kpi"><div class="label">Brand Utilization</div><div class="value">${brandUtil.toFixed(1)}%</div><div class="hint">expense ÷ budget</div></div>
-    <div class="kpi"><div class="label">SBUs Reporting</div><div class="value" style="color:var(--accent)">${reportingCount} / ${brandData.length}</div><div class="hint">entered actuals</div></div>
-    <div class="kpi"><div class="label">No Data</div><div class="value" style="color:var(--amber)">${noDataCount}</div><div class="hint">tracker not provided</div></div>`;
+    <div class="kpi"><div class="label">Brand FY Budget</div><div class="value">${cr(totalBrand)} Cr</div><div class="hint"><span class="dchip info">${brandData.length} SBUs</span></div></div>
+    <div class="kpi"><div class="label">Brand Expense</div><div class="value">${cr(totalBrandExp)} Cr</div><div class="hint"><span class="dchip">as of 30 Sep 2026</span></div></div>
+    <div class="kpi"><div class="label">Brand Utilization</div><div class="value">${brandUtil.toFixed(1)}%</div><div class="hint"><span class="dchip ${brandUtil>75?'warn':'ok'}">expense ÷ budget</span></div></div>
+    <div class="kpi"><div class="label">SBUs Reporting</div><div class="value pos">${reportingCount} / ${brandData.length}</div><div class="hint"><span class="dchip ok">entered actuals</span></div></div>
+    <div class="kpi"><div class="label">No Data</div><div class="value wrn">${noDataCount}</div><div class="hint"><span class="dchip warn">tracker not provided</span></div></div>`;
 
   const sorted = [...brandData].sort((a,b)=>b.budget-a.budget);
   newChart("budgetChart", {
     type:"bar",
     data:{ labels:sorted.map(s=>s.name.replace(/\s*\([A-Z]{3}\)/g,"").replace(" — Brand Budget","(Brand)")),
       datasets:[
-        { label:"FY Budget", data:sorted.map(s=>s.budget), backgroundColor:"rgba(59,130,246,.75)", borderRadius:5 },
-        { label:"Expense to date", data:sorted.map(s=>s.expense), backgroundColor:"rgba(239,68,68,.85)", borderRadius:5 }
+        { label:"FY Budget", data:sorted.map(s=>s.budget), backgroundColor:"#3B82F6", borderRadius:5 },
+        { label:"Expense to date", data:sorted.map(s=>s.expense), backgroundColor:"#D97706", borderRadius:5 }
       ]},
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
@@ -259,7 +378,7 @@ function renderOverview(){
   const catKeys = CAT_KEYS.filter(k=>agg[k]>0);
   newChart("categoryChart", {
     type:"doughnut",
-    data:{ labels:catKeys.map(k=>CAT_LABELS[k]), datasets:[{ data:catKeys.map(k=>agg[k]), backgroundColor:catKeys.map(k=>CAT_COLORS[k]), borderColor:"#060b14", borderWidth:2 }]},
+    data:{ labels:catKeys.map(k=>CAT_LABELS[k]), datasets:[{ data:catKeys.map(k=>agg[k]), backgroundColor:catKeys.map(k=>CAT_COLORS[k]), borderColor:CHSURF, borderWidth:2 }]},
     options:{ responsive:true, maintainAspectRatio:false, cutout:"58%",
       plugins:{ legend:{ position:"right", labels:{ boxWidth:10, boxHeight:10, font:{size:11} } } } }
   });
@@ -270,8 +389,8 @@ function renderOverview(){
   newChart("monthlyChart", {
     type:"bar",
     data:{ labels:MONTHS, datasets:[
-      { label:"Budget", data:mb, backgroundColor:"rgba(59,130,246,.65)", borderRadius:4 },
-      { label:"Actual", data:ma, backgroundColor:"rgba(239,68,68,.85)", borderRadius:4 }
+      { label:"Budget", data:mb, backgroundColor:"#3B82F6", borderRadius:4 },
+      { label:"Actual", data:ma, backgroundColor:"#D97706", borderRadius:4 }
     ]},
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
@@ -284,8 +403,8 @@ function renderOverview(){
   rs.forEach(s=>{
     const m = STATUS_META[s.status];
     const pct = s.budget ? (s.expense||0)/s.budget*100 : 0;
-    const barColor = pct>100?"var(--red)":(pct>75?"var(--amber)":"var(--accent)");
-    rows += `<tr><td>${s.name}</td><td style="color:var(--muted)">${s.custodian||"—"}</td>
+    const barColor = pct>100?"var(--bad)":(pct>75?"var(--warn)":"var(--ok)");
+    rows += `<tr><td>${s.name}</td><td style="color:var(--ink-3)">${s.custodian||"—"}</td>
       <td class="num">${cr(s.budget)}</td><td class="num">${cr(s.expense)}</td><td class="num">${s.budget?pct.toFixed(1)+"%":"—"}</td>
       <td style="width:85px">${s.budget?`<div class="bar-wrap"><div class="bar" style="width:${Math.min(pct,100)}%;background:${barColor}"></div></div>`:""}</td>
       <td><span class="chip ${m.cls}">${m.label}</span></td></tr>`;
@@ -307,10 +426,10 @@ function drawSbu(){
   const s = BRAND.find(x=>x.name===name);
   const pct = s.budget ? (s.expense||0)/s.budget*100 : 0;
   document.getElementById("sbuKpis").innerHTML = `
-    <div class="kpi"><div class="label">FY Budget</div><div class="value">${cr(s.budget)} Cr</div><div class="hint">${s.custodian||""}</div></div>
-    <div class="kpi"><div class="label">Expense to Date</div><div class="value">${cr(s.expense)} Cr</div><div class="hint">as of 30 Sep 2026</div></div>
-    <div class="kpi"><div class="label">% Used</div><div class="value" style="color:${pct>100?'var(--red)':pct>75?'var(--amber)':'var(--accent)'}">${pct.toFixed(1)}%</div><div class="hint">expense ÷ budget</div></div>
-    <div class="kpi"><div class="label">Remaining</div><div class="value">${cr(s.budget-(s.expense||0))} Cr</div><div class="hint">budget − expense</div></div>`;
+    <div class="kpi"><div class="label">FY Budget</div><div class="value">${cr(s.budget)} Cr</div><div class="hint"><span class="dchip info">${s.custodian||""}</span></div></div>
+    <div class="kpi"><div class="label">Expense to Date</div><div class="value">${cr(s.expense)} Cr</div><div class="hint"><span class="dchip">as of 30 Sep 2026</span></div></div>
+    <div class="kpi"><div class="label">% Used</div><div class="value ${pct>100?'bdd':pct>75?'wrn':'pos'}">${pct.toFixed(1)}%</div><div class="hint"><span class="dchip ${pct>100?'bad':pct>75?'warn':'ok'}">expense ÷ budget</span></div></div>
+    <div class="kpi"><div class="label">Remaining</div><div class="value">${cr(s.budget-(s.expense||0))} Cr</div><div class="hint"><span class="dchip ok">budget − expense</span></div></div>`;
   document.getElementById("sbuSource").innerHTML = `<b>Source:</b> ${s.source||"—"} &nbsp;·&nbsp; <b>Status:</b> ${STATUS_META[s.status].label}`;
   destroyAll();
 
@@ -321,7 +440,7 @@ function drawSbu(){
     catCanvas.style.display = "";
     newChart("sbuCatChart", {
       type:"doughnut",
-      data:{ labels:keys.map(k=>CAT_LABELS[k]), datasets:[{ data:keys.map(k=>s.cats[k]), backgroundColor:keys.map(k=>CAT_COLORS[k]), borderColor:"#060b14", borderWidth:2 }]},
+      data:{ labels:keys.map(k=>CAT_LABELS[k]), datasets:[{ data:keys.map(k=>s.cats[k]), backgroundColor:keys.map(k=>CAT_COLORS[k]), borderColor:CHSURF, borderWidth:2 }]},
       options:{ responsive:true, maintainAspectRatio:false, cutout:"58%",
         plugins:{ legend:{ position:"right", labels:{ boxWidth:10, boxHeight:10, font:{size:11} } } } }
     });
@@ -338,7 +457,7 @@ function drawSbu(){
   const hlKeys = Object.keys(hl).filter(k=>hl[k]>0);
   newChart("sbuHlChart", {
     type:"bar",
-    data:{ labels:hlKeys, datasets:[{ label:"Budget (Cr)", data:hlKeys.map(k=>hl[k]), backgroundColor:["#ef4444","#f59e0b","#3b82f6","#64748b"], borderRadius:5 }]},
+    data:{ labels:hlKeys, datasets:[{ label:"Budget (Cr)", data:hlKeys.map(k=>hl[k]), backgroundColor:["#3B82F6","#D97706","#10B981","#94A3B8"], borderRadius:5 }]},
     options:{ responsive:true, maintainAspectRatio:false, indexAxis:"y",
       plugins:{ legend:{ display:false } }, scales:{ x:{ title:{ display:true, text:"BDT Crore" } } } }
   });
@@ -348,8 +467,8 @@ function drawSbu(){
   mc.style.display=""; mn.style.display="none";
   if(m && (m.budget || m.actual)){
     const datasets=[];
-    if(m.budget) datasets.push({ label:"Budget", data:m.budget, backgroundColor:"rgba(59,130,246,.65)", borderRadius:4 });
-    if(m.actual) datasets.push({ label:"Actual", data:m.actual, backgroundColor:"rgba(239,68,68,.85)", borderRadius:4 });
+    if(m.budget) datasets.push({ label:"Budget", data:m.budget, backgroundColor:"#3B82F6", borderRadius:4 });
+    if(m.actual) datasets.push({ label:"Actual", data:m.actual, backgroundColor:"#D97706", borderRadius:4 });
     md.textContent = (m.budget && m.actual) ? "Budget phasing vs. actual spend (BDT Crore)" : (m.budget ? "Budget phasing (BDT Crore) — no actuals entered yet" : "Actual spend (BDT Crore) — no budget phasing provided");
     newChart("sbuMonthChart", { type:"bar", data:{ labels:MONTHS, datasets },
       options:{ responsive:true, maintainAspectRatio:false,
@@ -360,14 +479,14 @@ function drawSbu(){
     const ek = Object.keys(s.expenseCats).filter(k=>(s.expenseCats[k]||0)>0);
     md.textContent = "Actual spend by cost type (no monthly phasing in source) — BDT Crore";
     newChart("sbuMonthChart", { type:"doughnut",
-      data:{ labels:ek.map(k=>EXP_LABELS[k]||k), datasets:[{ data:ek.map(k=>s.expenseCats[k]), backgroundColor:ek.map(k=>EXP_COLORS[k]||"#64748b"), borderColor:"#060b14", borderWidth:2 }]},
+      data:{ labels:ek.map(k=>EXP_LABELS[k]||k), datasets:[{ data:ek.map(k=>s.expenseCats[k]), backgroundColor:ek.map(k=>EXP_COLORS[k]||"#64748b"), borderColor:CHSURF, borderWidth:2 }]},
       options:{ responsive:true, maintainAspectRatio:false, cutout:"55%",
         plugins:{ legend:{ position:"right", labels:{ boxWidth:10, boxHeight:10, font:{size:11} } } } } });
   } else {
     document.getElementById("sbuMonthTitle").textContent = "Budget vs. Expense — " + s.name;
     md.textContent = "No monthly phasing available — showing utilization (BDT Crore)";
     newChart("sbuMonthChart", { type:"bar",
-      data:{ labels:["Budget","Expense to date","Remaining"], datasets:[{ label:"Cr", data:[s.budget, s.expense||0, Math.max(0, s.budget-(s.expense||0))], backgroundColor:["#3b82f6","#ef4444","#22c55e"], borderRadius:5 }]},
+      data:{ labels:["Budget","Expense to date","Remaining"], datasets:[{ label:"Cr", data:[s.budget, s.expense||0, Math.max(0, s.budget-(s.expense||0))], backgroundColor:["#3B82F6","#D97706","#10B981"], borderRadius:5 }]},
       options:{ responsive:true, maintainAspectRatio:false,
         plugins:{ legend:{ display:false } },
         scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } } });
@@ -377,18 +496,18 @@ function drawSbu(){
 // ================= TRADE =================
 function renderTrade(){
   document.getElementById("tradeKpis").innerHTML = `
-    <div class="kpi"><div class="label">Trade FY Budget</div><div class="value">${cr(totalTrade)} Cr</div><div class="hint">${TRADE.length} SBUs</div></div>
-    <div class="kpi"><div class="label">Trade Expense</div><div class="value">${cr(totalTradeExp)} Cr</div><div class="hint">as of 30 Sep 2026</div></div>
-    <div class="kpi"><div class="label">Trade Utilization</div><div class="value">${tradeUtil.toFixed(1)}%</div><div class="hint">expense ÷ budget</div></div>
-    <div class="kpi"><div class="label">Brand + Trade Total</div><div class="value">${cr(totalBrand+totalTrade)} Cr</div><div class="hint">all SBUs</div></div>
-    <div class="kpi"><div class="label">Brand + Trade Expense</div><div class="value">${cr(totalBrandExp+totalTradeExp)} Cr</div><div class="hint">all SBUs</div></div>`;
+    <div class="kpi"><div class="label">Trade FY Budget</div><div class="value">${cr(totalTrade)} Cr</div><div class="hint"><span class="dchip info">${TRADE.length} SBUs</span></div></div>
+    <div class="kpi"><div class="label">Trade Expense</div><div class="value">${cr(totalTradeExp)} Cr</div><div class="hint"><span class="dchip">as of 30 Sep 2026</span></div></div>
+    <div class="kpi"><div class="label">Trade Utilization</div><div class="value">${tradeUtil.toFixed(1)}%</div><div class="hint"><span class="dchip ${tradeUtil>75?'warn':'ok'}">expense ÷ budget</span></div></div>
+    <div class="kpi"><div class="label">Brand + Trade Total</div><div class="value">${cr(totalBrand+totalTrade)} Cr</div><div class="hint"><span class="dchip info">all SBUs</span></div></div>
+    <div class="kpi"><div class="label">Brand + Trade Expense</div><div class="value">${cr(totalBrandExp+totalTradeExp)} Cr</div><div class="hint"><span class="dchip">all SBUs</span></div></div>`;
 
   newChart("tradeChart", {
     type:"bar",
     data:{ labels:TRADE.map(s=>s.name.replace(/\s*\([A-Z]{3}\)/g,"").replace(" — Trade Marketing","(Trade)").replace(" — Trade","(Trade)")),
       datasets:[
-        { label:"FY Budget", data:TRADE.map(s=>s.budget), backgroundColor:"rgba(59,130,246,.75)", borderRadius:5 },
-        { label:"Expense to date", data:TRADE.map(s=>s.expense), backgroundColor:"rgba(239,68,68,.85)", borderRadius:5 }
+        { label:"FY Budget", data:TRADE.map(s=>s.budget), backgroundColor:"#3B82F6", borderRadius:5 },
+        { label:"Expense to date", data:TRADE.map(s=>s.expense), backgroundColor:"#D97706", borderRadius:5 }
       ]},
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
@@ -398,8 +517,8 @@ function renderTrade(){
   let rows="";
   TRADE.forEach(s=>{
     const pct = s.budget ? (s.expense||0)/s.budget*100 : 0;
-    const barColor = pct>100?"var(--red)":(pct>75?"var(--amber)":"var(--accent)");
-    rows += `<tr><td>${s.name}</td><td style="color:var(--muted)">${s.custodian}</td>
+    const barColor = pct>100?"var(--bad)":(pct>75?"var(--warn)":"var(--ok)");
+    rows += `<tr><td>${s.name}</td><td style="color:var(--ink-3)">${s.custodian}</td>
       <td class="num">${cr(s.budget)}</td><td class="num">${cr(s.expense)}</td><td class="num">${pct.toFixed(1)}%</td>
       <td style="width:80px"><div class="bar-wrap"><div class="bar" style="width:${Math.min(pct,100)}%;background:${barColor}"></div></div></td></tr>`;
   });
@@ -410,7 +529,7 @@ function renderTrade(){
   const at = TRADE[0] && TRADE[0].monthly && TRADE[0].monthly.budget;
   newChart("tradeMonthChart", {
     type:"bar",
-    data:{ labels:MONTHS, datasets:[{ label:"Budget (Cr)", data:at || MONTHS.map(()=>0), backgroundColor:"rgba(59,130,246,.65)", borderRadius:4 }]},
+    data:{ labels:MONTHS, datasets:[{ label:"Budget (Cr)", data:at || MONTHS.map(()=>0), backgroundColor:"#3B82F6", borderRadius:4 }]},
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ position:"top", labels:{ boxWidth:10, boxHeight:10 } } },
       scales:{ y:{ title:{ display:true, text:"BDT Crore" } } } }
@@ -427,8 +546,8 @@ function drawTab(id){
 }
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick = ()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
+    document.querySelectorAll(".tab").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-pressed","false");});
+    t.classList.add("active"); t.setAttribute("aria-pressed","true");
     activeTab = t.dataset.tab;
     ["overview","sbu","trade"].forEach(x=> document.getElementById("tab-"+x).style.display = x===activeTab ? "" : "none");
     drawTab(activeTab);
@@ -482,6 +601,19 @@ async function hydrateFromDataJson(){
 recomputeTotals();
 renderOverview();
 hydrateFromDataJson();
+
+// ---------- theme toggle (presentation layer only; data + hydration untouched) ----------
+function setTheme(mode){
+  document.documentElement.dataset.theme=mode;
+  const light=mode==="light";
+  INK=light?"#475569":"#94A3B8";
+  GRID=light?"rgba(100,116,139,.22)":"rgba(148,163,184,.15)";
+  CHSURF=light?"#FFFFFF":"#111827";
+  Chart.defaults.color=INK; Chart.defaults.borderColor=GRID;
+  document.getElementById("themeToggle").setAttribute("aria-pressed",String(light));
+  drawTab(activeTab);
+}
+document.getElementById("themeToggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="light"?"dark":"light"));
 </script>
 </body>
 </html>
