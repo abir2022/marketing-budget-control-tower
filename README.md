@@ -1,3 +1,5 @@
+![Marketing Budget Control Tower](assets/banner.svg)
+
 # Marketing Budget & Expense Control Tower — FY 2026-27 (Portfolio Demo)
 
 A zero-build static dashboard that consolidates brand and trade marketing budget vs. actual
